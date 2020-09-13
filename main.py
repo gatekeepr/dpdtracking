@@ -7,7 +7,10 @@ def track(update, context):
     if len(context.args) == 2:
         #try
             print("before freshpack")
-            freshPack = Parcel(context.args[0], context.args[1], update.message.from_user["id"])
+            try:
+                freshPack = Parcel(context.args[0], context.args[1], update.message.from_user["id"])
+            except Exception as e:
+                print(e.text)
             print(freshPack + " = " + freshPack.tracking)
             for elem in PARCEL_LIST:
                 if(elem.tracking == freshPack.tracking):
