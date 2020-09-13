@@ -3,6 +3,7 @@ from config.telegramBot import updater, dispatcher, CommandHandler
 from model.parcel import Parcel
 
 def track(update, context):
+    print(f"went into track with {context.args}")
     if context.args:
         try:
             freshPack = Parcel(context.args[0], context.args[1], update.message.from_user["id"])
@@ -32,7 +33,8 @@ def remove(update, context):
                     saveParcelList(PARCEL_LIST)
                     return
             context.bot.send_message(chat_id=update.message.chat_id, text=f"Paket mit Alias {criteria} wurde nicht gefunden!")
-        except:
+        except Exception as E:
+            print(E.text)
             context.bot.send_message(chat_id=update.message.chat_id, text="Irgendwas ist schief gelaufen ...")
     else:
         context.bot.send_message(chat_id=update.message.chat_id, text="Bitte sende mir den Alias des Paketes was du entfernen willst (/remove deinPaketName).")
@@ -53,9 +55,13 @@ def update(update, context):
 
 def getall(update, context):
     user = update.message.from_user["id"]
+    isEmpty = True
     for elem in PARCEL_LIST:
         if(elem.owner == user):
+            isEmpty = False
             context.bot.send_message(chat_id=update.message.chat_id, text=f"{elem}")
+    if(isEmpty):
+        context.bot.send_message(chat_id=update.message.chat_id, text=f"Du hast noch keine Pakete in deiner Liste. Nutze /track")
 
 if __name__ == '__main__':
     # print all parcels currently tracked
