@@ -17,7 +17,6 @@ class Parcel:
         self.tracking = tracking
         self.owner = owner
         resp = requests.get(TRACKING_URL + "?documentCode=" + str(self.tracking))
-        print(resp.text)
         soup = BeautifulSoup(resp.text, "html.parser")
         elemCollect = soup.find_all("li")
         for elem in elemCollect:
@@ -29,7 +28,6 @@ class Parcel:
         tmpDate.reverse()
         self.date = "-".join(tmpDate)
         self.consignee = soup.find_all("span")[0].string.strip()
-        print("done creating object")
 
     def __str__(self):
         return f"<{self.alias}> - {self.status} - [{self.date}]"

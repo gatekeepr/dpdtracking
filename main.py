@@ -3,15 +3,15 @@ from config.telegramBot import updater, dispatcher, CommandHandler
 from model.parcel import Parcel
 
 def track(update, context):
-    print(f"went into track with {context.args}")
     if len(context.args) == 2:
-        #try
-            print("before freshpack")
+        try:
             try:
                 freshPack = Parcel(context.args[0], context.args[1], update.message.from_user["id"])
-            except Exception as e:
-                print(e.text)
-            print(freshPack + " = " + freshPack.tracking)
+            except Exception as E:
+                print(str(E))
+                context.bot.send_message(chat_id=update.message.chat_id, text="Irgendwas ist schief gelaufen mit dieser Nummer: " + context.args[0])
+                return
+            print(str(freshPack) + " = " + freshPack.tracking)
             for elem in PARCEL_LIST:
                 if(elem.tracking == freshPack.tracking):
                     context.bot.send_message(chat_id=update.message.chat_id, text=f"Das Paket wird schon getrackt! \n {freshPack}")
@@ -19,8 +19,8 @@ def track(update, context):
             PARCEL_LIST.append(freshPack)
             saveParcelList(PARCEL_LIST)
             context.bot.send_message(chat_id=update.message.chat_id, text=f"Paket erfolgreich hinzugefügt! \n {freshPack}")
-        #except Exception as E:
-            #print(E.text)
+        except Exception as E:
+            print(str(E))
             #context.bot.send_message(chat_id=update.message.chat_id, text="Irgendwas ist schief gelaufen mit dieser Nummer: " + context.args[0])
     else:
         context.bot.send_message(chat_id=update.message.chat_id, text="Bitte sende mir deine DPD Trackingnummer und einen Namen (Format: /track NUMMER PACKETNAME)")
@@ -38,7 +38,7 @@ def remove(update, context):
                     return
             context.bot.send_message(chat_id=update.message.chat_id, text=f"Paket mit Alias {criteria} wurde nicht gefunden!")
         except Exception as E:
-            print(E.text)
+            print(str(E))
             context.bot.send_message(chat_id=update.message.chat_id, text="Irgendwas ist schief gelaufen ...")
     else:
         context.bot.send_message(chat_id=update.message.chat_id, text="Bitte sende mir den Alias des Paketes was du entfernen willst (/remove deinPaketName).")

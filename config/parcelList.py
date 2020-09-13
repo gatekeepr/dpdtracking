@@ -1,5 +1,6 @@
 import pickle
 import os
+import model.parcel
 
 WAREHOUSE_FILENAME = 'parcelWarehouse.pkl'
 
