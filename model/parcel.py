@@ -29,6 +29,7 @@ class Parcel:
         tmpDate.reverse()
         self.date = "-".join(tmpDate)
         self.consignee = soup.find_all("span")[0].string.strip()
+        print("done creating object")
 
     def __str__(self):
         return f"<{self.alias}> - {self.status} - [{self.date}]"
