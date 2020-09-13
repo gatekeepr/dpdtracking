@@ -4,8 +4,8 @@ from model.parcel import Parcel
 
 def track(update, context):
     print(f"went into track with {context.args}")
-    if context.args:
-        try:
+    if len(context.args) == 2:
+        #try
             freshPack = Parcel(context.args[0], context.args[1], update.message.from_user["id"])
             print(freshPack + " = " + freshPack.tracking)
             for elem in PARCEL_LIST:
@@ -15,9 +15,9 @@ def track(update, context):
             PARCEL_LIST.append(freshPack)
             saveParcelList(PARCEL_LIST)
             context.bot.send_message(chat_id=update.message.chat_id, text=f"Paket erfolgreich hinzugefügt! \n {freshPack}")
-        except Exception as E:
-            print(E.text)
-            context.bot.send_message(chat_id=update.message.chat_id, text="Irgendwas ist schief gelaufen mit dieser Nummer: " + context.args[0])
+        #except Exception as E:
+            #print(E.text)
+            #context.bot.send_message(chat_id=update.message.chat_id, text="Irgendwas ist schief gelaufen mit dieser Nummer: " + context.args[0])
     else:
         context.bot.send_message(chat_id=update.message.chat_id, text="Bitte sende mir deine DPD Trackingnummer und einen Namen (Format: /track NUMMER PACKETNAME)")
 
