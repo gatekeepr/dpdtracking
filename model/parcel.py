@@ -17,6 +17,7 @@ class Parcel:
         self.tracking = tracking
         self.owner = owner
         resp = requests.get(TRACKING_URL + "?documentCode=" + str(self.tracking))
+        print(resp.text)
         soup = BeautifulSoup(resp.text, "html.parser")
         elemCollect = soup.find_all("li")
         for elem in elemCollect:
