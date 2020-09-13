@@ -6,6 +6,7 @@ def track(update, context):
     print(f"went into track with {context.args}")
     if len(context.args) == 2:
         #try
+            print("before freshpack")
             freshPack = Parcel(context.args[0], context.args[1], update.message.from_user["id"])
             print(freshPack + " = " + freshPack.tracking)
             for elem in PARCEL_LIST:
