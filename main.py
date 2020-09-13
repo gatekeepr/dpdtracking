@@ -12,12 +12,28 @@ def track(update, context):
                     return
             PARCEL_LIST.append(freshPack)
             saveParcelList(PARCEL_LIST)
+            print(freshPack + " = " + freshPack.tracking)
             context.bot.send_message(chat_id=update.message.chat_id, text=f"Paket erfolgreich hinzugefügt! \n {freshPack}")
         except:
             context.bot.send_message(chat_id=update.message.chat_id, text="Irgendwas ist schief gelaufen mit dieser Nummer: " + context.args[0])
     else:
         context.bot.send_message(chat_id=update.message.chat_id, text="Bitte sende mir deine DPD Trackingnummer und einen Namen (Format: /track NUMMER PACKETNAME)")
 
+def remove(update, context):
+    if context.args:
+        try:
+            user = update.message.from_user["id"]
+            criteria = context.args[0]
+            for elem in PARCEL_LIST:
+                if (elem.owner == user) and (elem.alias == criteria):
+                    context.bot.send_message(chat_id=update.message.chat_id, text=f"Folgendes Paket entfernt: \n {elem}")
+                    PARCEL_LIST.remove(elem)
+                    return
+            context.bot.send_message(chat_id=update.message.chat_id, text=f"Paket mit Alias {criteria} wurde nicht gefunden!")
+        except:
+            context.bot.send_message(chat_id=update.message.chat_id, text="Irgendwas ist schief gelaufen ...")
+    else:
+        context.bot.send_message(chat_id=update.message.chat_id, text="Bitte sende mir den Alias des Paketes was du entfernen willst (/remove deinPaketName).")
 
 def update(update, context):
     user = update.message.from_user["id"]
@@ -48,4 +64,5 @@ if __name__ == '__main__':
     dispatcher.add_handler(CommandHandler("track", track))
     dispatcher.add_handler(CommandHandler("update", update))
     dispatcher.add_handler(CommandHandler("getall", getall))
+    dispatcher.add_handler(CommandHandler("remove", remove))
     updater.start_polling()
