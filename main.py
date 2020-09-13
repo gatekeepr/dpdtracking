@@ -6,15 +6,16 @@ def track(update, context):
     if context.args:
         try:
             freshPack = Parcel(context.args[0], context.args[1], update.message.from_user["id"])
+            print(freshPack + " = " + freshPack.tracking)
             for elem in PARCEL_LIST:
                 if(elem.tracking == freshPack.tracking):
                     context.bot.send_message(chat_id=update.message.chat_id, text=f"Das Paket wird schon getrackt! \n {freshPack}")
                     return
             PARCEL_LIST.append(freshPack)
             saveParcelList(PARCEL_LIST)
-            print(freshPack + " = " + freshPack.tracking)
             context.bot.send_message(chat_id=update.message.chat_id, text=f"Paket erfolgreich hinzugefügt! \n {freshPack}")
-        except:
+        except Exception as E:
+            print(E.text)
             context.bot.send_message(chat_id=update.message.chat_id, text="Irgendwas ist schief gelaufen mit dieser Nummer: " + context.args[0])
     else:
         context.bot.send_message(chat_id=update.message.chat_id, text="Bitte sende mir deine DPD Trackingnummer und einen Namen (Format: /track NUMMER PACKETNAME)")
@@ -28,6 +29,7 @@ def remove(update, context):
                 if (elem.owner == user) and (elem.alias == criteria):
                     context.bot.send_message(chat_id=update.message.chat_id, text=f"Folgendes Paket entfernt: \n {elem}")
                     PARCEL_LIST.remove(elem)
+                    saveParcelList(PARCEL_LIST)
                     return
             context.bot.send_message(chat_id=update.message.chat_id, text=f"Paket mit Alias {criteria} wurde nicht gefunden!")
         except:
