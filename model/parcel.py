@@ -21,12 +21,10 @@ class Parcel:
         elemCollect = soup.find_all("li")
         for elem in elemCollect:
             if(elem["class"][0] == "div_li3"):
-                tmpDate = elem.string.strip()
+                tmpDate = elem.string
             elif(elem["class"][0] == "div_li4"):
                 self.status = elem.string
-        tmpDate =  tmpDate[:-9].split("-")
-        tmpDate.reverse()
-        self.date = "-".join(tmpDate)
+        self.date = formatDate(tmpDate)
         self.consignee = soup.find_all("span")[0].string.strip()
 
     def __str__(self):
@@ -43,7 +41,13 @@ class Parcel:
                 newStatus = elem.string
         if(newStatus != self.status):
             self.status = newStatus
-            self.date = newDate
+            self.date = formatDate(newDate)
             return True
         else:
             return False
+
+    def formatDate(self, rawDate):
+        tmpDate = rawDate.strip()
+        tmpDate = tmpDate[:-9].split("-")
+        tmpDate.reverse()
+        return "-".join(tmpDate)
